@@ -13,3 +13,4 @@ pom.xml.asc
 /.vscode
 /.idea
 /.shadow-cljs
+.eastwood
