@@ -30,9 +30,6 @@
   (println "Hello, World again! (require '[bank.core :reload :all])"))
 
 
-(def available-limit (atom nil))
-(def last-transaction (atom nil))
-
 
 ;;verifica se eh uma conta
 ;;desativado
@@ -42,6 +39,7 @@
 
 ;;verifica o tipo de operacao
 (defn operationType [json]
+  ;some? retorna true se x nao for nil
   (if (= (some? (get-in json ["account"])) true)
     "account"
     (if (= (some? (get-in json ["transaction"])) true)
@@ -52,28 +50,16 @@
 )
 
 
-;;verifica se eh uma conta ativa
-(defn is-active-account [json]
-  ;se o atributo 'activeCard'estiver setado para true, retorna true
-  (if (= (get-in json ["account" "activeCard"]) true)
-    true
-    false))
 
-;;obtem o limite de uma conta ativa
-(defn account-limit [json]
-  ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
-  (if (= (is-active-account json) true)
-    (def available-limit  (get-in json ["account" "availableLimit"]))
-    (def available-limit nil)))
 
-;;obtem o limite de uma conta ativa
-(defn account-limit2 [json]
-  ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
-  (if (= (is-active-account json) true)
-    (get-in json ["account" "availableLimit"])
-    nil
-  )
-)
+;;;obtem o limite de uma conta ativa
+;(defn account-limit [json]
+;  ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
+;  (if (= (is-active-account json) true)
+;    (def available-limit  (get-in json ["account" "availableLimit"]))
+;    (def available-limit nil)))
+
+
 
 
 (defn read1 [& args]
@@ -86,23 +72,23 @@
   ;;verifica se existe account 
   (println " ")
   (println "operation Type:" (operationType json))
-  (println "activeCard:" (is-active-account json))
+  (println "activeCard:" (validate/is-active-account json))
 
-  ;;executa  o limite da conta
-  ;(account-limit2 json)
-  (def limit (account-limit2 json))
-  (def available-limit limit)
+  ;;define  o limite da conta
+  (def available-limit (validate/account-limit json))
+
 
   ;;(if (< some? 100) "yes" "no"))
 
   ;;(def available-limit  (get-in json ["account" "available-limit"]))
-  (println "available-limit global:" available-limit)
-  (println "available-limit local:" limit)
+  (println "available-limit:" available-limit)
   (println " ")
   ;;
 
   )
 
+
+(def available-limit (atom nil))
 
 
 (defn read2 [& args]
@@ -110,13 +96,14 @@
 
   (read1)
 
+  (def last-time (t/now))
   ;leitura json 2
   (def json (json/read-str (slurp "src/bank/oper2.json")))
 
   (println "operation Type:" (operationType json) )
 
   (case (operationType json)
-    "transaction" (validate/validate-transaction json available-limit)
+    "transaction" (validate/validate-transaction json available-limit last-time)
     "account" (println "algo com account")
   )
 
@@ -127,7 +114,14 @@
 
 ;equivalente o stdin para receber as referencias json
 (defn operations [& args]
+  (renew)
   (doseq [line (line-seq (java.io.BufferedReader. *in*))]
+
+    (case (operationType json)
+      "transaction" (validate/validate-transaction json available-limit last-time)
+      "account" (println "algo com account")
+    )
+      
 
     (println line)
   )
