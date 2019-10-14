@@ -11,6 +11,18 @@
 (import java.text.SimpleDateFormat)
 
 
+;;verifica o tipo de operacao
+(defn operationType [json]
+    ;some? retorna true se x nao for nil
+    (if (= (some? (get-in json ["account"])) true)
+        "account"
+        (if (= (some? (get-in json ["transaction"])) true)
+            "transaction"
+            nil
+        )
+    )
+  )
+
 ;;verifica se eh uma conta ativa
 (defn is-active-account [json]
     ;se o atributo 'activeCard'estiver setado para true, retorna true
