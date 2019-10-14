@@ -65,18 +65,24 @@
 
   (def temp (json/read-str "{ \"transaction\": { \"merchant\": \"Nike\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\" } }"))
   (testing "limite 22 mesmo horario"
-    (is (= (validate-transaction temp 100 l-time)  "doubled-transaction")
+    (is (= (validate-transaction temp 100 l-time)  "ok")
     )
   )
 
   (def temp (json/read-str "{ \"transaction\": { \"merchant\": \"Cinemark\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\" } }"))
   (testing "limite 21 mesmo horario"
-    (is (= (validate-transaction temp 100 l-time)  "doubled-transaction")
+    (is (= (validate-transaction temp 100 l-time)  "ok")
     )
   )
 
 
-  (testing "teste de fronteira: limite 20"
+  (testing "limite 20 mesmo horario"
+    (is (= (validate-transaction temp 20 l-time)  "high-frequency-small-interval")
+    )
+  )
+
+
+  (testing "limite 20 mesmo horario"
     (is (= (validate-transaction temp 20 l-time)  "high-frequency-small-interval")
     )
   )
