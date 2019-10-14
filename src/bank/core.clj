@@ -31,68 +31,67 @@
   (some? (get-in json ["account"])))
 
 
+(defn process-input [input]
+
+  (def account-out "")
+  (def transaction-out "")
+  (def unknown-out "")
+
+  (try
+    (do
+      (def t-json (json/read-str input))
+
+      ;validacao do tipo de json
+      (case (val/operationType? t-json)
+        "transaction" (def transaction-out (val/validate-transaction t-json val/account-limit val/account-last-time))
+        "account" (def account-out (val/validate-account t-json))
+        nil (def unknown-out "invalid-input")
+      )
+    )
+    (catch Exception e
+      (def unknown-out "invalid-input")
+    )
+  )
+
+  ;formata saida de account
+  (if (> (count account-out) 1)
+    (do
+      (if (= account-out "ok")
+        (def account-out "") ;limpa saida para ok
+      )
+      (println (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [account-out]}))
+    )      
+  )
+
+  ;formata saida de transaction
+  (if (> (count transaction-out) 0)
+    (do
+      ;debita o valor se transacao OK
+      (if (= transaction-out "ok")
+        (do
+          (val/debit val/t-amount) ;debita valor 
+          (def transaction-out "") ;limpa saida para ok
+        )
+      )
+      (println (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [transaction-out]}))
+    )
+  )
+
+  (if (> (count unknown-out) 0)
+    (println (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [unknown-out]}))
+  )
+
+  (if (= input "stop")
+    (throw (Exception. "stop"))
+  )
+)
 
 
 
-
-
-
-
-
-(defn read1 [& args]
+;teste de entrada de operacoes
+(defn test-operations [& args]
   (renew)
-  ;leitura do arquivo json
-  (def json (json/read-str (slurp "src/bank/oper1.json"))) 
-
-  ;;(println (get-in json ["account"]))
-
-  ;;verifica se existe account 
-  (println " ")
-  (println "operation Type:" (val/operationType? json))
-  (println "activeCard:" (val/is-active-account? json))
-
-  ;;define  o limite da conta
-  (def available-limit (val/account-limit? json))
-
-
-  ;;(if (< some? 100) "yes" "no"))
-
-  ;;(def available-limit  (get-in json ["account" "available-limit"]))
-  (println "available-limit:" available-limit)
-  (println " ")
-  ;;
-
-  )
-
-
-(def available-limit (atom nil))
-
-
-(defn read2 [& args]
-  ;leitura do json 1 + variaveis globais
-
-  (read1)
-
-  (def last-time (t/now))
-  ;leitura json 2
-  (def json (json/read-str (slurp "src/bank/oper2.json")))
-
-  (println "operation Type:" (val/operationType? json) )
-
-  (case (val/operationType? json)
-    "transaction" (val/validate-transaction json available-limit last-time)
-    "account" (println "algo com account")
-  )
-
-  ;;
-  )
-
-
-
-;equivalente o stdin para receber as referencias json
-(defn operations [& args]
-  (renew)
-  (val/reset)
+  ;equivalente o stdin para receber as referencias json
   (doseq [line (line-seq (java.io.BufferedReader. *in*))]
 
 
@@ -105,45 +104,27 @@
       "5" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Gibson\", \"amount\": 15, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
     )
 
-    ;parse de string para json
-    ;(def t-json (json/read-str temp))
-
+    
+    (process-input t-json)
     ;(println t-json)
 
-    (def account-out "")
-    (def transaction-out "")
-
-    ;validacao do tipo de json
-    (case (val/operationType? t-json)
-      "transaction" (def transaction-out (val/validate-transaction t-json val/account-limit val/account-last-time))
-      "account" (def account-out (val/validate-account t-json))
-    )
-
-    ;formata saida de account
-    (if (> (count account-out) 1)
-      (do
-        (if (= account-out "ok")
-          (def account-out "") ;limpa saida para ok
-        )
-        (println (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [account-out]}))
-      )      
-    )
-
-    ;formata saida de transaction
-    (if (> (count transaction-out) 0)
-      (do
-        ;debita o valor se transacao OK
-        (if (= transaction-out "ok")
-          (do
-            (val/debit val/t-amount) ;debita valor 
-            (def transaction-out "") ;limpa saida para ok
-          )
-        )
-        (println (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [transaction-out]}))
-      )
-    )
+    
   
 
+
+  )
+)
+
+
+(defn operations [& args]
+  (renew)
+  ;equivalente o stdin para receber as referencias json
+  (doseq [line (line-seq (java.io.BufferedReader. *in*))]
+
+    ;parse de string para json
+
+
+    (process-input line)
 
   )
 )
