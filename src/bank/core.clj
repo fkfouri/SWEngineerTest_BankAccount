@@ -96,9 +96,12 @@
 
 
     (case line
-      "1" (def t-json (json/read-str "{ \"account\": { \"activeCard\": true, \"availableLimit\": 100 } }"))
-      "2" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\" } }"))
-      "3" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Habbib's\", \"amount\": 90, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
+      "0" (def t-json (json/read-str "{ \"account\": { \"activeCard\": true, \"availableLimit\": 100 } }"))
+      "1" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\" } }"))
+      "2" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Habbib's\", \"amount\": 90, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
+      "3" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Adidas\", \"amount\": 30, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
+      "4" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Nike\", \"amount\": 40, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
+      "5" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Gibson\", \"amount\": 15, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
     )
 
     ;parse de string para json

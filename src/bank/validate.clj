@@ -57,20 +57,28 @@
 (def account-active false)
 (def account-last-time nil)
 
-(defn restart []
+;;set contexto para teste
+(defn start-test []
     (def freq 0)
     (def last-merchant nil)
     (def last-amount nil)
+    (def account-limit 0)
+    (def account-last-time nil)
+    (def account-active true)
 )
 
-(defn hz []
-    (println freq)
+;; calcula o delta entre duas datas
+(defn delta-time [d1 d2]
+    (if (t/before?  d1 d2)
+        (t/in-minutes (t/interval d1 d2))
+        (t/in-minutes (t/interval d2 d1))
+    )
 )
+
 
 (defn validate-transaction [json available-limit last-time]
     ;define se a conta esta ativa
     (def account-active-accepted account-active)
-
 
     ;leitura e validacao do valor da transacao
     (def t-amount (get-in json ["transaction" "amount"]))
@@ -79,81 +87,75 @@
     ;(println " ")
 
     ;leitura e validacao do horario da transacao
-    (def t-time (f/parse (get-in json ["transaction" "time"])))
+    (def t-time (f/parse (get-in json ["transaction" "time"]))) ;transaction-time
 
-    ;incremento da frequencia
-    (def freq (+ freq 1))
 
-    (if (nil? last-time)
-        (def time-accepted true)
-        (if (> (t/in-minutes (t/interval t-time last-time)) 2) 
-            (def time-accepted true)
-            (if (<= freq 3)
-                (def time-accepted true)
-                (def time-accepted false)
-            )
-        )
-    )
+    ;(println "freq==================>" freq )
+    ;(println "nil?" (nil? last-time) )
+    ;(println "last-time" last-time ) 
+    ;(println "t-time" t-time ) 
+
+    ;(if (nil? last-time)
+    ;    (def time-accepted true)
+    ;    (if (and (> (t/in-minutes (t/interval last-time t-time)) 2)  (< freq 3))
+    ;        (def time-accepted true)
+    ;        (def time-accepted false)
+    ;    )
+    ;)
 
     ;define o valor de account-last-time para ser usado pela aplicacao
-    (if (nil? last-time)
+    (if (or (nil? last-time) (t/after? t-time last-time ))
         (def account-last-time t-time)
     )
 
+    ;(if (t/after? t-time last-time )
+    ;    (def freq 0) ;zera frequencia
+    ;)
+
+
+    ;reinicia a contagem na janela de 2 minutos
+    (if (nil? last-time)
+        (def freq 0) ;incremento da frequencia
+        (if (< (t/in-minutes (t/interval last-time t-time)) 2)
+            (def freq (+ freq 1)) ;incremento da frequencia
+            (def freq 0) ;zera frequencia
+        )
+    )
+
+    (if (< freq 3)
+        (def time-accepted true)
+        (def time-accepted false)
+    )
+
+    ;(println "newfreq==================>" freq )
+    ;(println "newfreq==================>" (t/in-minutes (t/interval account-last-time t-time)) )
+    ;(if (and (some? last-time) (> (t/in-minutes (t/interval last-time t-time)) 2) )
+    ;    (def freq 0) ;zera frequencia
+    ;    (def freq (+ freq 1)) ;incremento da frequencia
+    ;)
 
     ;leitura e validacao de transacao similar
     (def t-merchant (get-in json ["transaction" "merchant"]))
     (if (nil? last-merchant)
         (def transaction-accepted true)
-        (if (= (= t-merchant last-merchant) (= t-amount last-amount))
+        (if (and (= t-merchant last-merchant) (= t-amount last-amount))
             (def transaction-accepted false)
             (def transaction-accepted true)
         )
     )
+    
     ;(println "t-merchant" t-merchant "  last-merchant" last-merchant transaction-accepted)
-    ;(println "t-amount" t-amount "  last-amount" last-amount)    
+    ;(println "t-amount" t-amount "  last-amount" last-amount) 
 
     ;atualiza a ultima compra
     (def last-merchant t-merchant)
     (def last-amount t-amount)
 
-    ;reinicia a contagem na janela de 2 minutos
-    (if (> (t/in-minutes (t/interval t-time last-time)) 2) 
-        (restart)
-    )
-
-
-
-    ;(println "t-time:" t-time )
-    ;(println "time-accepted:" time-accepted )
-    ;(println " ")
-
-
-    ;(def now (t/now))
-    ;(println now)
-    ;(println "minutes:" (t/in-minutes (t/interval t-time now) ))
-    ;(println "days" (t/in-days (t/interval t-time now) ))
-
-
-    ;(def time-accepted (>= available-limit t-amount))
-   
-
-    ;(if (= (>= available-limit t-amount) true)
-    ;  (println "new available-limit:" (- available-limit t-amount) "at" t-time)
-    ;  (println "transactio not valid" "at" t-time)
-    ;)
-    
-
-    ;(if (= (>= available-limit t-amount) true)
-    ;  true
-    ;  false
-    ;)
-
     (cond
-        (= account-active-accepted false) "card-not-active"
+        (= account-active-accepted false) "card-not-active"    
         (= limit-accepted false) "insufficient-limit"
+        (= transaction-accepted false) "doubled-transaction"        
         (= time-accepted false) "high-frequency-small-interval"
-        (= transaction-accepted false) "doubled-transaction"
         :else "ok"
     )
 
@@ -169,7 +171,7 @@
     
     ;define se a conta esta ativa
     (def account-active (is-active-account? json))
-    (println "account-active:" account-active)
+    (println "account-active: AQUI" account-active)
 
     ;;define  o limite da conta
     (def account-limit (account-limit? json))
