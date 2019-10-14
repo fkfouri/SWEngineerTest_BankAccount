@@ -55,6 +55,7 @@
 (def last-amount nil)
 (def account-limit 0)
 (def account-active false)
+(def account-last-time nil)
 
 (defn restart []
     (def freq 0)
@@ -67,6 +68,10 @@
 )
 
 (defn validate-transaction [json available-limit last-time]
+    ;define se a conta esta ativa
+    (def account-active-accepted account-active)
+
+
     ;leitura e validacao do valor da transacao
     (def t-amount (get-in json ["transaction" "amount"]))
     (def limit-accepted (>= available-limit t-amount))
@@ -76,6 +81,7 @@
     ;leitura e validacao do horario da transacao
     (def t-time (f/parse (get-in json ["transaction" "time"])))
 
+    ;incremento da frequencia
     (def freq (+ freq 1))
 
     (if (nil? last-time)
@@ -88,6 +94,12 @@
             )
         )
     )
+
+    ;define o valor de account-last-time para ser usado pela aplicacao
+    (if (nil? last-time)
+        (def account-last-time t-time)
+    )
+
 
     ;leitura e validacao de transacao similar
     (def t-merchant (get-in json ["transaction" "merchant"]))
@@ -138,6 +150,7 @@
     ;)
 
     (cond
+        (= account-active-accepted false) "card-not-active"
         (= limit-accepted false) "insufficient-limit"
         (= time-accepted false) "high-frequency-small-interval"
         (= transaction-accepted false) "doubled-transaction"

@@ -19,8 +19,8 @@
 
 
 (defn renew  [& args]
-  (require '[bank.core :reload :all])
   (require '[bank.validate :reload :all])
+  (require '[bank.core :reload :all])
 )
 
 
@@ -104,14 +104,17 @@
     ;parse de string para json
     ;(def t-json (json/read-str temp))
 
+    (println t-json)
+
     ;validacao do tipo de json
     (case (val/operationType? t-json)
-      "transaction" (val/validate-transaction json val/account-limit last-time)
-      "account" (val/validate-account t-json)
+      "transaction" (def out (val/validate-transaction t-json val/account-limit val/account-last-time))
+      "account" (def out (val/validate-account t-json))
     )
-      
 
-    (println t-json)
+    (println out)
+
+   
 
 
   )
