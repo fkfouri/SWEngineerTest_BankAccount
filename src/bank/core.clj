@@ -42,12 +42,6 @@
 
 
 
-;;;obtem o limite de uma conta ativa
-;(defn account-limit [json]
-;  ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
-;  (if (= (is-active-account json) true)
-;    (def available-limit  (get-in json ["account" "availableLimit"]))
-;    (def available-limit nil)))
 
 
 
@@ -61,11 +55,11 @@
 
   ;;verifica se existe account 
   (println " ")
-  (println "operation Type:" (validate/operationType json))
-  (println "activeCard:" (validate/is-active-account json))
+  (println "operation Type:" (validate/operationType? json))
+  (println "activeCard:" (validate/is-active-account? json))
 
   ;;define  o limite da conta
-  (def available-limit (validate/account-limit json))
+  (def available-limit (validate/account-limit? json))
 
 
   ;;(if (< some? 100) "yes" "no"))
@@ -90,9 +84,9 @@
   ;leitura json 2
   (def json (json/read-str (slurp "src/bank/oper2.json")))
 
-  (println "operation Type:" (validate/operationType json) )
+  (println "operation Type:" (validate/operationType? json) )
 
-  (case (validate/operationType json)
+  (case (validate/operationType? json)
     "transaction" (validate/validate-transaction json available-limit last-time)
     "account" (println "algo com account")
   )
@@ -107,12 +101,25 @@
   (renew)
   (doseq [line (line-seq (java.io.BufferedReader. *in*))]
 
-    (case (validate/operationType json)
+
+    (case line
+      "1" (def t-json (json/read-str "{ \"account\": { \"activeCard\": true, \"availableLimit\": 100 } }"))
+      "2" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\" } }"))
+      "3" (def t-json (json/read-str "{ \"transaction\": { \"merchant\": \"Habbib's\", \"amount\": 90, \"time\": \"2019-02-13T11:00:00.000Z\" } }"))
+    )
+
+    ;parse de string para json
+    ;(def t-json (json/read-str temp))
+
+    ;validacao do tipo de json
+    (case (validate/operationType? t-json)
       "transaction" (validate/validate-transaction json available-limit last-time)
-      "account" (println "algo com account")
+      "account" (validate/validate-account t-json)
     )
       
 
-    (println line)
+    (println t-json)
+
+
   )
 )

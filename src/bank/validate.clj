@@ -12,7 +12,7 @@
 
 
 ;;verifica o tipo de operacao
-(defn operationType [json]
+(defn operationType? [json]
     ;some? retorna true se x nao for nil
     (if (= (some? (get-in json ["account"])) true)
         "account"
@@ -24,25 +24,36 @@
   )
 
 ;;verifica se eh uma conta ativa
-(defn is-active-account [json]
+(defn is-active-account? [json]
     ;se o atributo 'activeCard'estiver setado para true, retorna true
     (if (= (get-in json ["account" "activeCard"]) true)
       true
-      false))
+      false)
+)
 
 
 ;;obtem o limite de uma conta ativa
-(defn account-limit [json]
+(defn account-limit? [json]
     ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
-    (if (= (is-active-account json) true)
-      (get-in json ["account" "availableLimit"])
-      nil
+    (if (= (is-active-account? json) true)
+        ;leitura do atributo availableLimit em account
+        (get-in json ["account" "availableLimit"])
+        nil
     )
-  )
+)
+
+;;;obtem o limite de uma conta ativa
+;(defn account-limit? [json]
+;  ;somente obtem o limite se for uma conta ativa, do contrario seta como nil
+;  (if (= (is-active-account? json) true)
+;    (def available-limit  (get-in json ["account" "availableLimit"]))
+;    (def available-limit nil)))
+
 
 (def freq 0)
 (def last-merchant nil)
 (def last-amount nil)
+(def account-limit 0)
 
 (defn restart []
     (def freq 0)
@@ -137,4 +148,20 @@
 )
 
 
-      
+;;valida se um input json eh uma transacao valida
+(defn validate-account [json]
+    (println " ")
+    (println "operation Type:" (operationType? json))
+    (println "activeCard:" (is-active-account? json))
+  
+    ;;define  o limite da conta
+    ;(def account-limit (available-limit json))
+  
+  
+    ;;(if (< some? 100) "yes" "no"))
+  
+    ;;(def account-limit  (get-in json ["account" "account-limit"]))
+    ;(println "account-limit:" account-limit)
+    (println " ")
+
+) 
