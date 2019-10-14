@@ -54,6 +54,7 @@
 (def last-merchant nil)
 (def last-amount nil)
 (def account-limit 0)
+(def account-active false)
 
 (defn restart []
     (def freq 0)
@@ -152,16 +153,19 @@
 (defn validate-account [json]
     (println " ")
     (println "operation Type:" (operationType? json))
-    (println "activeCard:" (is-active-account? json))
-  
+    
+    ;define se a conta esta ativa
+    (def account-active (is-active-account? json))
+    (println "account-active:" account-active)
+
     ;;define  o limite da conta
-    ;(def account-limit (available-limit json))
+    (def account-limit (account-limit? json))
   
   
     ;;(if (< some? 100) "yes" "no"))
   
     ;;(def account-limit  (get-in json ["account" "account-limit"]))
-    ;(println "account-limit:" account-limit)
+    (println "account-limit:" account-limit)
     (println " ")
 
 ) 

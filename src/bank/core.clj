@@ -12,7 +12,7 @@
 (require '[clojure.java.io :as io])
 (require '[clj-time.core :as t])
 (require '[clj-time.format :as f])
-(require '[bank.validate :as validate])
+(require '[bank.validate :as val])
 (import java.util.Date)
 (import java.text.SimpleDateFormat)
 
@@ -22,13 +22,6 @@
   (require '[bank.core :reload :all])
   (require '[bank.validate :reload :all])
 )
-
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (renew)
-  (println "Hello, World again! (require '[bank.core :reload :all])"))
-
 
 
 ;;verifica se eh uma conta
@@ -55,11 +48,11 @@
 
   ;;verifica se existe account 
   (println " ")
-  (println "operation Type:" (validate/operationType? json))
-  (println "activeCard:" (validate/is-active-account? json))
+  (println "operation Type:" (val/operationType? json))
+  (println "activeCard:" (val/is-active-account? json))
 
   ;;define  o limite da conta
-  (def available-limit (validate/account-limit? json))
+  (def available-limit (val/account-limit? json))
 
 
   ;;(if (< some? 100) "yes" "no"))
@@ -84,10 +77,10 @@
   ;leitura json 2
   (def json (json/read-str (slurp "src/bank/oper2.json")))
 
-  (println "operation Type:" (validate/operationType? json) )
+  (println "operation Type:" (val/operationType? json) )
 
-  (case (validate/operationType? json)
-    "transaction" (validate/validate-transaction json available-limit last-time)
+  (case (val/operationType? json)
+    "transaction" (val/validate-transaction json available-limit last-time)
     "account" (println "algo com account")
   )
 
@@ -112,9 +105,9 @@
     ;(def t-json (json/read-str temp))
 
     ;validacao do tipo de json
-    (case (validate/operationType? t-json)
-      "transaction" (validate/validate-transaction json available-limit last-time)
-      "account" (validate/validate-account t-json)
+    (case (val/operationType? t-json)
+      "transaction" (val/validate-transaction json val/account-limit last-time)
+      "account" (val/validate-account t-json)
     )
       
 
