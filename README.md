@@ -1,6 +1,11 @@
-# bank
+# Nubank - Bank operationg test
 
-FIXME: description
+This development was proposed by Nubank as a challenge to code a process of bank operations.
+
+During the interview I have noticed that the Clojure is the language more used by the company. So I decided to learn and implement the requirements request on this language.
+
+I have implemented all requirements as it was requested. But I have confess I have had some difficulty to set my mind to code in Clojure.The mission is now done. :)
+
 
 ## Installation
 

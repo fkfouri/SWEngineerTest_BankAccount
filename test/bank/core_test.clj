@@ -9,11 +9,6 @@
 )
 
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 1 1))))
-
-
 (deftest validate-transaction-limit-test
   (def l-time nil)
   (start-test)
