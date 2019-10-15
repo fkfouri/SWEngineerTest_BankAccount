@@ -105,14 +105,10 @@
   )
 )
 
-
+;Inicia com Lein run
 (defn -main [& args]
-  ;(renew)
   ;equivalente o stdin para receber as referencias json
   (doseq [line (line-seq (java.io.BufferedReader. *in*))]
-
-    ;parse de string para json
-
 
     (println (process-input line))
 
