@@ -2,8 +2,6 @@
   (:gen-class
   )
 )
-
-(require '[net.cgrand.enlive-html :as enlive])
 (require '[clojure.string :as s])
 (require '[clojure.pprint :refer [pprint]])
 (require '[clojure.data.json :as json])
@@ -83,7 +81,7 @@
 
 
 
-;teste de entrada de operacoes
+;teste de entrada de operacoes. Utilizado apenas para o desenvolvedor testar sem a necessidade de escrever recorrentemente os inputs em json
 (defn test-operations [& args]
   (renew)
   ;equivalente o stdin para receber as referencias json
@@ -105,7 +103,7 @@
   )
 )
 
-;Inicia com Lein run
+;Programa principal. Inicia-se com o comando "Lein run"
 (defn -main [& args]
   ;equivalente o stdin para receber as referencias json
   (doseq [line (line-seq (java.io.BufferedReader. *in*))]
