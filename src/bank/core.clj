@@ -71,9 +71,9 @@
     (def out (json/write-str {:account {:activeCard val/account-active, :availableLimit val/account-limit} :violations [unknown-out]}))
   )
 
-  (if (= input "stop")
-    (throw (Exception. "stop"))
-  )
+  ;(if (= input "stop")
+  ;  (throw (Exception. "stop"))
+  ;)
 
   (cond
     (some? out) out

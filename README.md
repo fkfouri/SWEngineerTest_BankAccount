@@ -2,9 +2,9 @@
 
 This development was proposed by Nubank as a challenge to code a process of bank operations.
 
-During the interview I have noticed that the Clojure is the language more used by the company. So I decided to learn and implement the requirements request on this language.
+During the interview I have noticed that the Clojure is the language more used by the company. So I decided to learn and implement the requirements requested on this language.
 
-I have implemented all requirements as it was requested. But I have confess I have had some difficulty to set my mind to code in Clojure.The mission is now done. :)
+It was my first time with functional programming. I hope the code is reasonable for your quality level. The mission is now done. :)
 
 
 ## Installation
@@ -13,40 +13,26 @@ Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
+`lein run`
 
-    $ java -jar bank-0.1.0-standalone.jar [args]
+Next, please input on the prompt the transactions test in json format.
 
-## Options
+```
+$ lein run
+{ "account": { "activeCard": true, "availableLimit": 100 } }
+{ "transaction": { "merchant": "Burger King", "amount": 20, "time": "2019-02-13T10:00:00.000Z" } }
+{ "transaction": { "merchant": "Habbib's", "amount": 90, "time": "2019-02-13T11:00:00.000Z" } }
 
-FIXME: listing of options this app accepts.
+```
 
-## Examples
+The answer will be presented immediately after the each line of input, like a stream data service.
 
-...
+## Test
 
-### Articles
-https://dev.to/adasomg/10-life-changing-minutes-with-clojure-windows-3ofl
+I have implemented plus violations code as "chronology-error" and "invalid-input". First is assigned for any new transaction with operation date before a last valid transaction.  Second is assigned for any input out of the pattern.
 
-...
+I have made 12 cases tests for a totally 42 verifications. Some tests as unit test to valid operations, some Boundary tests for valid the transaction limit  and some integrated tests to valid a sequence of operations.
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+## External Libraries
 
-## License
-
-
-
-Copyright © 2019 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+I have used only open source libraries in this development. My featured is library to work with dates and with json.
