@@ -7,9 +7,16 @@ During the interview I have noticed that the Clojure is the language more used b
 It was my first time with functional programming. I hope the code is reasonable for your quality level. The mission is now done. :)
 
 
-## Installation
+## Build / Deploy
 
-Download from http://example.com/FIXME.
+1. Step 1: Unzip file to directory
+
+Passo 0:  Download da imagem $docker pull clojure
+Passo 1:  Descompacte o arquivo .zip  
+Passo 2:  No diretorio onde descompactou o arquivo zip, rode o comando $docker build -t Nubank_test .  
+Passo 3:  Em seguinda execute $docker run -it Nubank_test /bin/bash  
+Passo 4:  Estando logado dentro do container execute o seguinte comando:   
+          $lein run  Após este passo insira o json necessário.
 
 ## Usage
 
