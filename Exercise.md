@@ -135,7 +135,7 @@ output
 and should be listed in the outputs's `violations` field as described on the `output` schema in the examples. That means the program execution should continue normally after any violation.
 
 ## Our expectations
-We at Nubank value **simple, elegant, and working code**. This exercise should reflect your understanding of it.
+We at Digital Bank  value **simple, elegant, and working code**. This exercise should reflect your understanding of it.
 
 Your solution is expected to be **production quality**, **maintainable** and **extensible**. Hence, we will look for:
 
@@ -145,7 +145,7 @@ Your solution is expected to be **production quality**, **maintainable** and **e
 
 ## General notes
 
-- This challenge may be extended by you and a Nubank engineer on a different step of the process;
+- This challenge may be extended by you and a  Digital Bank engineer on a different step of the process;
 - You should submit your solution source code to us as a compressed file containing the code and possible documentation. Please make sure not to include unnecessary files such as compiled binaries, libraries, etc;
 - Do not upload your solution to public repositories in GitHub, BitBucket, etc;
 - Please keep your test anonymous, paying attention to:

@@ -1,6 +1,6 @@
-# Nubank - Bank operationg test
+# A Digital Bank - Bank operationg test
 
-This development was proposed by Nubank as a challenge to code a process of bank operations.
+This development was proposed by Digital Bank as a challenge to code a process of bank operations.
 
 During the interview I have noticed that the Clojure is the language more used by the company. So I decided to learn and implement the requirements requested on this language.
 
@@ -10,8 +10,8 @@ It was my first time with functional programming. I hope the code is reasonable 
 ## Build / Deploy
 
 1. Step 1: Unzip the file bank_account.zip and get in the bank_account folder
-2. Step 2: Run code `$docker build -t Nubank_test .` 
-3. Step 3: Run code `$docker run -it Nubank_test /bin/bash`
+2. Step 2: Run code `$docker build -t xpto_test .` 
+3. Step 3: Run code `$docker run -it xpto_test /bin/bash`
 4. Step 4: Inside the container, please run code `lein run`
 5. Step 5: Please input the operations (Account creation and Transaction authorization)
 
